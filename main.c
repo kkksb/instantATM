@@ -3,6 +3,7 @@
 int main(void)
 {
     int balance = 10000; // balanceは残高という意味
+    // TODO balanceが万が一マイナスになってしまった時の処理
 
     // 最初のメニューの選択
     int choicedMenu;
@@ -41,7 +42,7 @@ int main(void)
                     printf("何円入金しますか？(単位をのぞいて入力)");
                     scanf("%d", &depositCash);
 
-                    // TODO: 入金した値が不正でないか判定
+                    // TODO: 入金した値が不正でないか判定(数値ではない何かが入ってないか？)
                     balance += depositCash;
                     printf("%d円入金しました。残高は%d円です。\n", depositCash, balance);
                     break;
@@ -73,7 +74,7 @@ int main(void)
                     printf("何円出金しますか？(単位をのぞいて入力)");
                     scanf("%d", &withdrawCash);
 
-                    // TODO: 入金した値が不正でないか判定(入力値に数字以外がまぎれた場合)
+                    // TODO: 出金した値が不正でないか判定(入力値に数字以外がまぎれた場合)
                     if (withdrawCash > balance)
                     {
                         printf("残高を超える出金は不可能です。\n");
