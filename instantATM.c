@@ -2,6 +2,7 @@
 #include <stdlib.h> // exitを呼び出すために一応読み込み
 
 // プロトタイプ宣言（main関数から他の関数を呼び出すため）
+// TODO ポインタでbalanceをわたし、balanceの更新処理を一回で済ませる
 int depositDeal(int);
 int withdrawDeal(int);
 // TODO この関数で残高が変更されない処理が行われたとき、なぜ返り値が0になるか調べる
@@ -115,7 +116,7 @@ int depositDeal(int balance)
 
     // 入金処理に必要な情報
     int choicedDepositMenu; // depositは入金の意味
-    int depositCash;        // ユーザが入金する金額
+    int depositCash = 0;    // ユーザが入金する金額
 
     do
     {
@@ -133,10 +134,7 @@ int depositDeal(int balance)
             {
                 balance += depositCash;
                 printf("%d円入金しました。残高は%d円です。\n\n", depositCash, balance);
-                // TODO このわかりづらい処理を修正
-
-                return depositCash;
-                // ここでbreakしないと、他のブロックに入ってreturn 0となってしまう
+                // 最初のメニューに戻るためにbreak
                 break;
             }
             else
@@ -155,6 +153,7 @@ int depositDeal(int balance)
             printf("入金手続きメニューの1、2のどちらかを選択してください。\n\n");
         }
     } while (choicedDepositMenu != 2);
+    return depositCash;
 }
 
 int withdrawDeal(int balance)
@@ -170,7 +169,7 @@ int withdrawDeal(int balance)
 
     // 出金処理に必要な情報
     int choicedWithdrawMenu; // withdrawは引き出し の意味
-    int withdrawCash;        // ユーザが出金する金額
+    int withdrawCash = 0;    // ユーザが出金する金額
 
     do
     {
@@ -197,10 +196,7 @@ int withdrawDeal(int balance)
                 {
                     balance -= withdrawCash; // TODO main関数内の残高更新処理とわけなくてすむようにしたい
                     printf("%d円出金しました。残高は%d円です。\n\n", withdrawCash, balance);
-                    return withdrawCash;
-
-                    // TODO このわかりづらい処理を修正
-                    // ここでブレイクしないと、他のブロックに入ってreturn 0;となってしまう
+                    // 最初のメニューに戻るためにbreak
                     break;
                 }
                 else
@@ -220,4 +216,5 @@ int withdrawDeal(int balance)
             printf("出金手続きメニューの1、2のどちらかを選択してください。\n\n");
         }
     } while (choicedWithdrawMenu != 2);
+    return withdrawCash;
 }
