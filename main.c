@@ -16,16 +16,19 @@ int main(void)
     int depositCash;        // ユーザが入金する金額
 
     // 出金処理に必要な情報
-    int choicedWithdrawMenu;
-    int withdrawCash;
+    int choicedWithdrawMenu; // withdrawは引き出し の意味
+    int withdrawCash;        // ユーザが出金する金額
 
     printf("〇〇銀行ATMへようこそ！\n");
     printf("このプログラムでは通帳に見立てたテキストファイルを使って口座の管理をします。\n");
+    printf("accountMemory.txtというファイルを用いて操作します。このファイルがない場合は、自動で新規作成します。\n");
+    printf("上記のファイルはこのプログラムがあるディレクトリ直下に生成されます。\n\n");
 
     // TODO ファイル入出力を用いて残高の管理を行う
-    fp = fopen("accoutMemory.txt", "r");
+    fp = fopen("accoutMemory.txt", "w"); // wモードなので、ファイルが存在しない場合は新規作成
     if (fp == NULL)
     {
+        // 念のため、ファイルポインタがNULLの場合の分岐を作成
         printf("通帳ファイルが読み込めませんでした。\n");
         printf("1万円口座に入っていると仮定したサンプルプログラムを起動します。\n\n");
     }
