@@ -41,7 +41,7 @@ int main(void)
     do
     {
         printf("お取引内容を以下から選択してください。(1~4で回答)\n");
-        printf("1: 残高照会 2: 入金 3: 引き出し 4: 終了\n");
+        printf("1: 残高照会 2: 入金 3: 引き出し 4: 終了 > ");
         scanf("%d", &choicedMenu);
 
         switch (choicedMenu)
@@ -88,6 +88,12 @@ int main(void)
             break;
 
         case 3:
+            // 残高が0以下の場合、取引をしない
+            if (balance <= 0)
+            {
+                printf("残高が0円、もしくは不正値となっています。\n");
+                break;
+            }
 
             do
             {
