@@ -195,7 +195,7 @@ int withdrawDeal(int balance)
                 if (withdrawCash > 0)
                 {
                     balance -= withdrawCash; // TODO main関数内の残高更新処理とわけなくてすむようにしたい
-                    printf("%d円出金しました。残高は%d円です。\n\n", withdrawCash, balance);
+                    printf("%d円出金しました。\n\n", withdrawCash, balance);
                     // 最初のメニューに戻るためにbreak
                     break;
                 }
