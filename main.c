@@ -33,7 +33,7 @@ int main(void)
             do
             {
                 printf("入金の手続きをします。以下のメニューから選択してください。\n");
-                printf("1: 入金手続き 2: メニューに戻る\n");
+                printf("1: 入金手続きを進める 2: メニューに戻る\n");
                 // 入金手続きをするかどうかもユーザに選択させる
                 scanf("%d", &choicedDepositMenu);
                 if (choicedDepositMenu == 1)
@@ -42,10 +42,16 @@ int main(void)
                     printf("何円入金しますか？(単位をのぞいて入力)");
                     scanf("%d", &depositCash);
 
-                    // TODO: 入金した値が不正でないか判定(数値ではない何かが入ってないか？)
-                    balance += depositCash;
-                    printf("%d円入金しました。残高は%d円です。\n", depositCash, balance);
-                    break;
+                    if (depositCash > 0)
+                    {
+                        balance += depositCash;
+                        printf("%d円入金しました。残高は%d円です。\n", depositCash, balance);
+                        break;
+                    }
+                    else
+                    {
+                        printf("入力不正を検知しました。もう一度入力してください。\n");
+                    }
                 }
                 else if (choicedDepositMenu == 2)
                 {
@@ -64,7 +70,7 @@ int main(void)
             do
             {
                 printf("出金の手続きをします。以下のメニューから選択してください。\n");
-                printf("1: 出金手続き 2: メニューに戻る\n");
+                printf("1: 出金手続きを続ける 2: メニューに戻る\n");
                 // 出金手続きをするかどうかもユーザに選択させる
                 scanf("%d", &choicedWithdrawMenu);
                 if (choicedWithdrawMenu == 1)
@@ -74,15 +80,19 @@ int main(void)
                     printf("何円出金しますか？(単位をのぞいて入力)");
                     scanf("%d", &withdrawCash);
 
-                    // TODO: 出金した値が不正でないか判定(入力値に数字以外がまぎれた場合)
                     if (withdrawCash > balance)
+                    // 出金額が残高以上引き出されることを阻止
                     {
                         printf("残高を超える出金は不可能です。\n");
                     }
                     else
                     {
-                        printf("%d円出金しました。残高は%d円です。\n", withdrawCash, balance);
-                        balance -= withdrawCash;
+                        if (withdrawCash > 0)
+                        {
+                            // 出金額が不正値にならないようにする
+                            balance -= withdrawCash;
+                            printf("%d円出金しました。残高は%d円です。\n", withdrawCash, balance);
+                        }
                     }
                     break;
                 }
@@ -103,8 +113,8 @@ int main(void)
             break;
 
         default:
-            printf("1~4にて入力してください。メニューに戻ります。\n");
             break;
+            printf("1~4にて入力してください。メニューに戻ります。\n");
         }
 
     } while (choicedMenu != 4);
