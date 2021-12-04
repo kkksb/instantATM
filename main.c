@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h> // exitを呼び出すために一応読み込み
 
+// プロトタイプ宣言（main関数から他の関数を呼び出せない）
 int depositDeal(int);
 int withdrawDeal(int);
 // TODO この関数で残高が変更されない処理が行われたとき、なぜ返り値が0になるか調べる
@@ -16,10 +17,10 @@ int main(void)
     FILE *fp;
 
     // 入金処理後の残高を格納する変数()
-    int depositResultBalance;
+    int depositResult;
 
     // 出金処理後の残高を格納する変数
-    int withdrawResultBalance;
+    int withdrawResult;
 
     printf("〇〇銀行ATMへようこそ！\n");
     printf("このプログラムでは通帳に見立てたテキストファイルを使って口座の管理をします。\n");
@@ -37,7 +38,7 @@ int main(void)
     }
     else
     {
-        printf("通帳を読み込みました。\n\n");
+        printf("通帳を読み込みました。もしくは新規作成しました。\n\n");
     }
 
     // このブロックでは実際のATMの操作を行う
@@ -54,14 +55,18 @@ int main(void)
             printf("口座残高は %d 円です\n\n", balance);
             break;
         case 2:
-            depositResultBalance = depositDeal(balance);
-            if (depositResultBalance != 0)
+            // 入金処理
+
+            depositResult = depositDeal(balance);
+            if (depositResult != 0)
             {
                 // 0でない場合は取引が成立。0の場合には残高に変更はない。残高を更新する。
-                balance = depositResultBalance;
+                balance += depositResult;
             }
             break;
         case 3:
+            // 出金処理
+
             // 0でない場合は取引が成立。0の場合には残高に変更はない。残高を更新する。
             if (balance <= 0)
             {
@@ -70,13 +75,11 @@ int main(void)
             }
             else
             {
-                withdrawResultBalance = withdrawDeal(balance);
-                if (
-                    withdrawResultBalance != 0)
+                withdrawResult = withdrawDeal(balance);
+                if (withdrawResult != 0)
                 {
                     // 0でない場合は取引が成立。0の場合には残高に変更はない。
-                    balance =
-                        withdrawResultBalance;
+                    balance -= withdrawResult;
                 }
             }
             break;
@@ -105,7 +108,7 @@ int depositDeal(int balance)
         int: 残高の情報
     }
     how to use:
-    渡された残高から入金処理を行う。ただし、ただしく入金処理が行えなかった場合には0を返す。
+    渡された残高情報から入金処理を行う。返り値は入金した金額。ただし、ただしく入金処理が行えなかった場合には0を返す。
     */
 
     // 入金処理に必要な情報
@@ -128,7 +131,10 @@ int depositDeal(int balance)
             {
                 balance += depositCash;
                 printf("%d円入金しました。残高は%d円です。\n\n", depositCash, balance);
-                return balance;
+                // TODO このわかりづらい処理を修正
+
+                return depositCash;
+                // ここでbreakしないと、他のブロックに入ってreturn 0となってしまう
                 break;
             }
             else
@@ -157,7 +163,7 @@ int withdrawDeal(int balance)
         int: 残高の情報
     }
     how to use:
-    渡された残高から出金処理を行う。返り値は変更された残高。ただし、ただしく出金処理が行えなかった場合には0を返す。
+    渡された残高から出金処理を行う。返り値は出金された金額。ただし、ただしく出金処理が行えなかった場合には0を返す。
     */
 
     // 出金処理に必要な情報
@@ -182,7 +188,6 @@ int withdrawDeal(int balance)
             // 出金額が残高以上引き出されることを阻止
             {
                 printf("残高を超える出金は不可能です。出金メニューに戻ります。\n\n");
-                break;
             }
             else
             {
@@ -190,16 +195,18 @@ int withdrawDeal(int balance)
                 {
                     balance -= withdrawCash;
                     printf("%d円出金しました。残高は%d円です。\n\n", withdrawCash, balance);
-                    return balance;
+                    return withdrawCash;
+
+                    // TODO このわかりづらい処理を修正
+                    // ここでブレイクしないと、他のブロックに入ってreturn 0;となってしまう
                     break;
                 }
                 else
                 {
                     // なにかしらの不具合が起きた場合の処理
-                    printf("不正値が入力されました。メニューに戻ります\n");
+                    printf("不正値が入力されました。メニューに戻ります\n\n");
                 }
             }
-            break;
         }
         else if (choicedWithdrawMenu == 2)
         {
@@ -209,7 +216,6 @@ int withdrawDeal(int balance)
         else
         {
             printf("出金手続きメニューの1、2のどちらかを選択してください。\n\n");
-            break;
         }
     } while (choicedWithdrawMenu != 2);
 }
