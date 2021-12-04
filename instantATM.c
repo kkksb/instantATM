@@ -4,7 +4,7 @@
 // プロトタイプ宣言（main関数から他の関数を呼び出すため）
 // TODO ポインタでbalanceをわたし、balanceの更新処理を一回で済ませる
 int depositDeal(int);
-int withdrawDeal(int);
+int withdrawDeal(int *);
 // TODO この関数で残高が変更されない処理が行われたとき、なぜ返り値が0になるか調べる
 
 int main(void)
@@ -77,13 +77,7 @@ int main(void)
             }
             else
             {
-                withdrawResult = withdrawDeal(balance);
-                if (withdrawResult != 0)
-                {
-                    // 出金処理結果が0でない場合は取引が成立。
-                    // 出金額で残高を更新。
-                    balance -= withdrawResult;
-                }
+                withdrawResult = withdrawDeal(&balance);
             }
             break;
         case 4:
@@ -156,12 +150,13 @@ int depositDeal(int balance)
     return depositCash;
 }
 
-int withdrawDeal(int balance)
+int withdrawDeal(int *balance)
 {
+    // TODO この関数の返り値をvoidにする(balanceを参照渡しするなら返り値は不要)
     /*
     return: int
     args: {
-        int: 残高の情報
+        int*: 残高の情報のポインタ(引数の残高情報をこの関数で更新してしまう)
     }
     how to use:
     渡された残高から出金処理を行う。返り値は出金された金額。ただし、ただしく出金処理が行えなかった場合には0を返す。
@@ -181,11 +176,11 @@ int withdrawDeal(int balance)
         if (choicedWithdrawMenu == 1)
         {
             // 出金を行う
-            printf("現在の残高は%d円です。\n", balance);
+            printf("現在の残高は%d円です。\n", *balance);
             printf("何円出金しますか？(単位をのぞいて入力) > ");
             scanf("%d", &withdrawCash);
 
-            if (withdrawCash > balance)
+            if (withdrawCash > *balance)
             // 出金額が残高以上引き出されることを阻止
             {
                 printf("残高を超える出金は不可能です。出金メニューに戻ります。\n\n");
@@ -194,8 +189,8 @@ int withdrawDeal(int balance)
             {
                 if (withdrawCash > 0)
                 {
-                    balance -= withdrawCash; // TODO main関数内の残高更新処理とわけなくてすむようにしたい
-                    printf("%d円出金しました。残高は%d円です。\n\n", withdrawCash, balance);
+                    *balance -= withdrawCash; // TODO main関数内の残高更新処理とわけなくてすむようにしたい
+                    printf("%d円出金しました。残高は%d円です。\n\n", withdrawCash, *balance);
                     // 最初のメニューに戻るためにbreak
                     break;
                 }
