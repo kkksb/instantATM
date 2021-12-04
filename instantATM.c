@@ -51,6 +51,7 @@ int main(void)
         case 2:
             // 入金処理
 
+            // 処理結果で残高の更新を行う。
             depositDeal(&balance);
             break;
         case 3:
@@ -64,6 +65,7 @@ int main(void)
             }
             else
             {
+                // 処理結果で残高の更新を行う。
                 withdrawDeal(&balance);
             }
             break;
@@ -87,12 +89,12 @@ int main(void)
 void depositDeal(int *balance)
 {
     /*
-    return: int
+    return: void
     args: {
         int: 残高の情報
     }
     how to use:
-    渡された残高情報から入金処理を行う。返り値は入金した金額。ただし、ただしく入金処理が行えなかった場合には0を返す。
+    渡された残高情報から入金処理を行う。残高の更新を行う。
     */
 
     // 入金処理に必要な情報
@@ -140,12 +142,12 @@ void withdrawDeal(int *balance)
 {
     // TODO この関数の返り値をvoidにする(balanceを参照渡しするなら返り値は不要)
     /*
-    return: int
+    return: void
     args: {
         int*: 残高の情報のポインタ(引数の残高情報をこの関数で更新してしまう)
     }
     how to use:
-    渡された残高から出金処理を行う。返り値は出金された金額。ただし、ただしく出金処理が行えなかった場合には0を返す。
+    渡された残高から出金処理を行う。残高の更新を行う。
     */
 
     // 出金処理に必要な情報
