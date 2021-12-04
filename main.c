@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h> // exitを呼び出すために一応読み込み
 
-// プロトタイプ宣言（main関数から他の関数を呼び出せない）
+// プロトタイプ宣言（main関数から他の関数を呼び出すため）
 int depositDeal(int);
 int withdrawDeal(int);
 // TODO この関数で残高が変更されない処理が行われたとき、なぜ返り値が0になるか調べる
@@ -16,7 +16,7 @@ int main(void)
     // 通帳に見立てたテキストファイル用のファイルポインタ
     FILE *fp;
 
-    // 入金処理後の残高を格納する変数()
+    // 入金処理後の残高を格納する変数
     int depositResult;
 
     // 出金処理後の残高を格納する変数
@@ -60,14 +60,15 @@ int main(void)
             depositResult = depositDeal(balance);
             if (depositResult != 0)
             {
-                // 0でない場合は取引が成立。0の場合には残高に変更はない。残高を更新する。
+                // 入金処理の結果が0でない場合は取引が成立している。
+                // 入金額によって残高を更新する。
                 balance += depositResult;
             }
             break;
         case 3:
             // 出金処理
 
-            // 0でない場合は取引が成立。0の場合には残高に変更はない。残高を更新する。
+            // 残高が0円、もしくはそれ未満の不正値の場合は取引を行わない
             if (balance <= 0)
             {
                 printf("残高が0円、もしくは不正値となっています。\n");
@@ -78,7 +79,8 @@ int main(void)
                 withdrawResult = withdrawDeal(balance);
                 if (withdrawResult != 0)
                 {
-                    // 0でない場合は取引が成立。0の場合には残高に変更はない。
+                    // 出金処理結果が0でない場合は取引が成立。
+                    // 出金額で残高を更新。
                     balance -= withdrawResult;
                 }
             }
@@ -193,7 +195,7 @@ int withdrawDeal(int balance)
             {
                 if (withdrawCash > 0)
                 {
-                    balance -= withdrawCash;
+                    balance -= withdrawCash; // TODO main関数内の残高更新処理とわけなくてすむようにしたい
                     printf("%d円出金しました。残高は%d円です。\n\n", withdrawCash, balance);
                     return withdrawCash;
 
