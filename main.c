@@ -27,11 +27,11 @@ int main(void)
     if (fp == NULL)
     {
         printf("通帳ファイルが読み込めませんでした。\n");
-        printf("1万円口座に入っていると仮定したサンプルプログラムを起動します。\n");
+        printf("1万円口座に入っていると仮定したサンプルプログラムを起動します。\n\n");
     }
     else
     {
-        printf("通帳を読み込みました。\n");
+        printf("通帳を読み込みました。\n\n");
     }
 
     // このブロックでは実際のATMの操作を行う
@@ -45,40 +45,41 @@ int main(void)
         {
         case 1:
             printf("残高の照会をします\n");
-            printf("口座残高は %d 円です\n", balance);
+            printf("口座残高は %d 円です\n\n", balance);
             break;
         case 2:
             do
             {
                 printf("入金の手続きをします。以下のメニューから選択してください。\n");
-                printf("1: 入金手続きを進める 2: メニューに戻る\n");
+                printf("1: 入金手続きを進める 2: メニューに戻る > ");
                 // 入金手続きをするかどうかもユーザに選択させる
                 scanf("%d", &choicedDepositMenu);
                 if (choicedDepositMenu == 1)
                 {
                     // 入金を行う
-                    printf("何円入金しますか？(単位をのぞいて入力)");
+                    printf("何円入金しますか？(単位をのぞいて入力) > ");
                     scanf("%d", &depositCash);
 
                     if (depositCash > 0)
                     {
                         balance += depositCash;
-                        printf("%d円入金しました。残高は%d円です。\n", depositCash, balance);
+                        printf("%d円入金しました。残高は%d円です。\n\n", depositCash, balance);
                         break;
                     }
                     else
                     {
-                        printf("入力不正を検知しました。もう一度入力してください。\n");
+                        printf("入力不正を検知しました。もう一度入力してください。\n\n");
                     }
                 }
                 else if (choicedDepositMenu == 2)
                 {
-                    printf("メニューに戻ります\n");
+                    // メニューに戻る時の操作の場合、\nを二つにする
+                    printf("メニューに戻ります\n\n");
                     break;
                 }
                 else
                 {
-                    printf("入金手続きメニューの1、2のどちらかを選択してください。\n");
+                    printf("入金手続きメニューの1、2のどちらかを選択してください。\n\n");
                 }
             } while (choicedDepositMenu != 2);
             break;
@@ -88,20 +89,20 @@ int main(void)
             do
             {
                 printf("出金の手続きをします。以下のメニューから選択してください。\n");
-                printf("1: 出金手続きを続ける 2: メニューに戻る\n");
+                printf("1: 出金手続きを続ける 2: メニューに戻る > ");
                 // 出金手続きをするかどうかもユーザに選択させる
                 scanf("%d", &choicedWithdrawMenu);
                 if (choicedWithdrawMenu == 1)
                 {
                     // 出金を行う
                     printf("現在の残高は%d円です。\n", balance);
-                    printf("何円出金しますか？(単位をのぞいて入力)");
+                    printf("何円出金しますか？(単位をのぞいて入力) > ");
                     scanf("%d", &withdrawCash);
 
                     if (withdrawCash > balance)
                     // 出金額が残高以上引き出されることを阻止
                     {
-                        printf("残高を超える出金は不可能です。\n");
+                        printf("残高を超える出金は不可能です。出金メニューに戻ります。\n\n");
                     }
                     else
                     {
@@ -109,19 +110,19 @@ int main(void)
                         {
                             // 出金額が不正値にならないようにする
                             balance -= withdrawCash;
-                            printf("%d円出金しました。残高は%d円です。\n", withdrawCash, balance);
+                            printf("%d円出金しました。残高は%d円です。\n\n", withdrawCash, balance);
                         }
                     }
                     break;
                 }
                 else if (choicedWithdrawMenu == 2)
                 {
-                    printf("メニューに戻ります\n");
+                    printf("メニューに戻ります\n\n");
                     break;
                 }
                 else
                 {
-                    printf("出金手続きメニューの1、2のどちらかを選択してください。\n");
+                    printf("出金手続きメニューの1、2のどちらかを選択してください。\n\n");
                     break;
                 }
             } while (choicedWithdrawMenu != 2);
@@ -132,7 +133,7 @@ int main(void)
 
         default:
             break;
-            printf("1~4にて入力してください。メニューに戻ります。\n");
+            printf("1~4にて入力してください。メニューに戻ります。\n\n");
         }
 
     } while (choicedMenu != 4);
