@@ -25,6 +25,7 @@ int main(void)
     printf("上記のファイルはこのプログラムがあるディレクトリ直下に生成されます。\n\n");
 
     // TODO ファイル入出力を用いて残高の管理を行う
+    // TODO ファイル入出力を関数化
     fp = fopen("accoutMemory.txt", "w"); // wモードなので、ファイルが存在しない場合は新規作成
     if (fp == NULL)
     {
@@ -51,6 +52,7 @@ int main(void)
             printf("口座残高は %d 円です\n\n", balance);
             break;
         case 2:
+            // TODO 出金処理を関数化
             do
             {
                 printf("入金の手続きをします。以下のメニューから選択してください。\n");
@@ -95,6 +97,7 @@ int main(void)
                 break;
             }
 
+            // TODO 入金処理を関数化
             do
             {
                 printf("出金の手続きをします。以下のメニューから選択してください。\n");
