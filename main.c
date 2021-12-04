@@ -1,12 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h> // exitを呼び出すために一応読み込み
 
 int main(void)
 {
     int balance = 10000; // balanceは残高という意味
-    // TODO balanceが万が一マイナスになってしまった時の処理
 
     // 最初のメニューの選択
     int choicedMenu;
+
+    // 通帳に見立てたテキストファイル用のファイルポインタ
+    FILE *fp;
 
     // 入金処理に必要な情報
     int choicedDepositMenu; // depositは入金の意味
@@ -16,9 +19,24 @@ int main(void)
     int choicedWithdrawMenu;
     int withdrawCash;
 
+    printf("〇〇銀行ATMへようこそ！\n");
+    printf("このプログラムでは通帳に見立てたテキストファイルを使って口座の管理をします。\n");
+
+    // TODO ファイル入出力を用いて残高の管理を行う
+    fp = fopen("accoutMemory.txt", "r");
+    if (fp == NULL)
+    {
+        printf("通帳ファイルが読み込めませんでした。\n");
+        printf("1万円口座に入っていると仮定したサンプルプログラムを起動します。\n");
+    }
+    else
+    {
+        printf("通帳を読み込みました。\n");
+    }
+
+    // このブロックでは実際のATMの操作を行う
     do
     {
-        printf("〇〇銀行ATMへようこそ！\n");
         printf("お取引内容を以下から選択してください。(1~4で回答)\n");
         printf("1: 残高照会 2: 入金 3: 引き出し 4: 終了\n");
         scanf("%d", &choicedMenu);
@@ -118,6 +136,9 @@ int main(void)
         }
 
     } while (choicedMenu != 4);
+
+    // 開いていたファイルを閉じる
+    fclose(fp);
 
     return 0;
 }
