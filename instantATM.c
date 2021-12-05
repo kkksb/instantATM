@@ -7,6 +7,7 @@
 int depositDeal(int);
 int withdrawDeal(int);
 int checkIfFileExists(const char *filename);
+void initialPassbookGenerate(FILE *fp, char *filename);
 // TODO 引数にあるconstの意味を確認
 // TODO この関数で残高が変更されない処理が行われたとき、なぜ返り値が0になるか調べる
 
@@ -47,20 +48,9 @@ int main(void)
     {
         printf("通帳ファイルが存在しませんでした。新規に作成します\n");
 
-        fp = fopen(passbookFileName, "w"); // w(書き込み)モードなので、ファイルが存在しない場合は新規作成
-        if (fp == NULL)
-        {
-            // 念のため、ファイルポインタがNULLの場合の分岐を作成
-            printf("新規作成に失敗しました。異常終了します。\n");
-            exit(1);
-        }
-        else
-        {
-            fputs("10000万円\n", fp);
-            printf("通帳を新規に作成しました。残高は10000万円からスタートです。\n");
-            fclose(fp);
-            printf("正常に通帳ファイルを閉じました。\n\n");
-        }
+        //通帳ファイルを新規に作成する関数
+        initialPassbookGenerate(fp, passbookFileName);
+        printf("通帳を新規に作成しました。残高は10000万円からスタートです。\n");
     }
 
     // このブロックでは実際のATMの操作を行う
@@ -252,4 +242,21 @@ int checkIfFileExists(const char *filename)
         return 1;
     else
         return 0;
+}
+
+void initialPassbookGenerate(FILE *fp, char *filename)
+{
+    fp = fopen(filename, "w"); // w(書き込み)モードなので、ファイルが存在しない場合は新規作成
+    if (fp == NULL)
+    {
+        // 念のため、ファイルポインタがNULLの場合の分岐を作成
+        printf("新規作成に失敗しました。異常終了します。\n");
+        exit(1);
+    }
+    else
+    {
+        fputs("10000万円\n", fp);
+        fclose(fp);
+        printf("正常に通帳ファイルを閉じました。\n\n");
+    }
 }
