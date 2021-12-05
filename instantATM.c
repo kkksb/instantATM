@@ -46,6 +46,7 @@ int main(void)
     {
         // check...にて、ファイルが存在する場合は1を返却する。
         printf("通帳ファイルを発見しました。読み込みます。\n\n");
+        // TODO 最新の取引を読み込んで、balanceに格納する
     }
     else
     {
@@ -101,6 +102,8 @@ int main(void)
                     // 出金処理結果が0でない場合は取引が成立。
                     // 出金額で残高を更新。
                     balance -= withdrawResult;
+                    accountRecord(fp, passbookFileName, balance);
+                    printf("更新した残高を通帳に記帳しました。\n");
                     printf("現在の残高は%d円です。\n\n", balance);
                 }
             }
