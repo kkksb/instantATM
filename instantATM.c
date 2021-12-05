@@ -64,6 +64,7 @@ int main(void)
                 // 入金処理の結果が0でない場合は取引が成立している。
                 // 入金額によって残高を更新する。
                 balance += depositResult;
+                printf("現在の残高は%d円です。\n\n", balance);
             }
             break;
         case 3:
@@ -83,6 +84,7 @@ int main(void)
                     // 出金処理結果が0でない場合は取引が成立。
                     // 出金額で残高を更新。
                     balance -= withdrawResult;
+                    printf("現在の残高は%d円です。\n\n", balance);
                 }
             }
             break;
@@ -132,8 +134,7 @@ int depositDeal(int balance)
 
             if (depositCash > 0)
             {
-                balance += depositCash;
-                printf("%d円入金しました。残高は%d円です。\n\n", depositCash, balance);
+                printf("%d円入金しました。\n", depositCash);
                 // 最初のメニューに戻るためにbreak
                 break;
             }
@@ -195,7 +196,7 @@ int withdrawDeal(int balance)
                 if (withdrawCash > 0)
                 {
                     balance -= withdrawCash; // TODO main関数内の残高更新処理とわけなくてすむようにしたい
-                    printf("%d円出金しました。\n\n", withdrawCash);
+                    printf("%d円出金しました。\n", withdrawCash);
                     // 最初のメニューに戻るためにbreak
                     break;
                 }
