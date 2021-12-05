@@ -2,7 +2,6 @@
 #include <stdlib.h> // exitを呼び出すために一応読み込み
 
 // プロトタイプ宣言（main関数から他の関数を呼び出すため）
-// TODO ポインタでbalanceをわたし、balanceの更新処理を一回で済ませる
 int depositDeal(int);
 int withdrawDeal(int);
 // TODO この関数で残高が変更されない処理が行われたとき、なぜ返り値が0になるか調べる
@@ -30,7 +29,7 @@ int main(void)
 
     // TODO ファイル入出力を用いて残高の管理を行う
     // TODO ファイル入出力を関数化
-    fp = fopen("accoutMemory.txt", "w"); // wモードなので、ファイルが存在しない場合は新規作成
+    fp = fopen("accoutMemory.txt", "w+"); // w+(読み書き)モードなので、ファイルが存在しない場合は新規作成
     if (fp == NULL)
     {
         // 念のため、ファイルポインタがNULLの場合の分岐を作成
@@ -101,6 +100,7 @@ int main(void)
 
     // 開いていたファイルを閉じる
     fclose(fp);
+    printf("通帳ファイルを正常に閉じました\n");
 
     return 0;
 }
