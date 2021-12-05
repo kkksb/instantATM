@@ -47,7 +47,7 @@ int main(void)
     {
         printf("通帳ファイルが存在しませんでした。新規に作成します\n");
 
-        fp = fopen(passbookFileName, "w"); // w+(読み書き)モードなので、ファイルが存在しない場合は新規作成
+        fp = fopen(passbookFileName, "w"); // w(書き込み)モードなので、ファイルが存在しない場合は新規作成
         if (fp == NULL)
         {
             // 念のため、ファイルポインタがNULLの場合の分岐を作成
@@ -59,7 +59,7 @@ int main(void)
             fputs("10000万円\n", fp);
             printf("通帳を新規に作成しました。残高は10000万円からスタートです。\n");
             fclose(fp);
-            printf("正常に通帳ファイルを閉じました。");
+            printf("正常に通帳ファイルを閉じました。\n\n");
         }
     }
 
