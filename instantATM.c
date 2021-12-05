@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>   // exitを呼び出すために一応読み込み
 #include <sys/stat.h> // ファイルの存在確認をするためのライブラリ
+#include <string.h>   // strcatなどを扱うヘッダ
 // https://www.delftstack.com/ja/howto/c/c-check-if-file-exists/
 
 // プロトタイプ宣言（main関数から他の関数を呼び出すため）
 int depositDeal(int);
 int withdrawDeal(int);
 int checkIfFileExists(const char *filename);
+
 void initialPassbookGenerate(FILE *fp, char *filename);
+void accountRecord(FILE *fp, char *filename, int updatedBalance);
 // TODO 引数にあるconstの意味を確認
 // TODO この関数で残高が変更されない処理が行われたとき、なぜ返り値が0になるか調べる
 
@@ -65,6 +68,7 @@ int main(void)
         case 1:
             printf("残高の照会をします\n");
             printf("口座残高は %d 円です\n\n", balance);
+            // TODO 通帳ファイルの最終行だけを読み込んで残高表示する
             break;
         case 2:
             // 入金処理
@@ -75,6 +79,8 @@ int main(void)
                 // 入金処理の結果が0でない場合は取引が成立している。
                 // 入金額によって残高を更新する。
                 balance += depositResult;
+                accountRecord(fp, passbookFileName, balance);
+                printf("更新した残高を通帳に記帳しました。\n");
                 printf("現在の残高は%d円です。\n\n", balance);
             }
             break;
@@ -244,6 +250,7 @@ int checkIfFileExists(const char *filename)
         return 0;
 }
 
+// TODO 残高処理の関数を共通化する?つまり、ファイル生成だけをする関数を作る
 void initialPassbookGenerate(FILE *fp, char *filename)
 {
     fp = fopen(filename, "w"); // w(書き込み)モードなので、ファイルが存在しない場合は新規作成
@@ -255,8 +262,44 @@ void initialPassbookGenerate(FILE *fp, char *filename)
     }
     else
     {
-        fputs("10000万円\n", fp);
+        fputs("10000円\n", fp);
         fclose(fp);
         printf("正常に通帳ファイルを閉じました。\n\n");
+    }
+}
+
+void accountRecord(FILE *fp, char *filename, int updatedBalance)
+{
+    // 整数を文字列に変換する方法
+    // https://www.delftstack.com/ja/howto/c/how-to-convert-an-integer-to-a-string-in-c/#c-%25E8%25A8%2580%25E8%25AA%259E%25E3%2581%25A7%25E6%2595%25B4%25E6%2595%25B0%25E3%2582%2592%25E6%2596%2587%25E5%25AD%2597%25E5%2588%2597%25E3%2581%25AB%25E5%25A4%2589%25E6%258F%259B%25E3%2581%2599%25E3%2582%258B%25E9%2596%25A2%25E6%2595%25B0-itoa
+
+    // TODO updatedBalanceの格納でオーバーフローするのを防ぐ処理
+    char balanceString[20]; // StringにしたupdatedBalanceを格納する変数
+    sprintf(balanceString, "%d", updatedBalance);
+
+    const char *unit = "円\n"; // unitは単位という意味
+
+    // TODO 確保した文字列メモリを変数として扱う方法
+    if (strlen(balanceString) + strlen(unit) < 20)
+    {
+        strcat(balanceString, unit);
+        // srtcatの使い方:https://marycore.jp/prog/c-lang/concat-c-string/
+        fp = fopen(filename, "a"); // a(追加書き込み)モードなので、ファイルが存在しない場合は新規作成
+        if (fp == NULL)
+        {
+            // 念のため、ファイルポインタがNULLの場合の分岐を作成
+            printf("通帳ファイルの読み込みに失敗しました。異常終了します。\n");
+            exit(1);
+        }
+        else
+        {
+            fputs(balanceString, fp);
+            fclose(fp);
+            printf("正常に通帳ファイルを閉じました。\n\n");
+        }
+    }
+    else
+    {
+        printf("長すぎる文字が記帳されそうです。記帳処理を中断します。\n\n");
     }
 }
