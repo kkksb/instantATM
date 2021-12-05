@@ -11,7 +11,7 @@ int main(void)
     int balance = 10000; // balanceは残高という意味
 
     // 最初のメニューの選択
-    int choicedMenu;
+    int choicedAtmMenu;
 
     // 通帳に見立てたテキストファイル用のファイルポインタ
     FILE *fp;
@@ -46,9 +46,9 @@ int main(void)
     {
         printf("お取引内容を以下から選択してください。(1~4で回答)\n");
         printf("1: 残高照会 2: 入金 3: 引き出し 4: 終了 > ");
-        scanf("%d", &choicedMenu);
+        scanf("%d", &choicedAtmMenu);
 
-        switch (choicedMenu)
+        switch (choicedAtmMenu)
         {
         case 1:
             printf("残高の照会をします\n");
@@ -96,7 +96,7 @@ int main(void)
             break;
         }
 
-    } while (choicedMenu != 4);
+    } while (choicedAtmMenu != 4);
 
     // 開いていたファイルを閉じる
     fclose(fp);
