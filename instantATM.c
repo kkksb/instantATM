@@ -1,13 +1,18 @@
 #include <stdio.h>
-#include <stdlib.h> // exitを呼び出すために一応読み込み
+#include <stdlib.h>   // exitを呼び出すために一応読み込み
+#include <sys/stat.h> // ファイルの存在確認をするためのライブラリ
+// https://www.delftstack.com/ja/howto/c/c-check-if-file-exists/
 
 // プロトタイプ宣言（main関数から他の関数を呼び出すため）
 int depositDeal(int);
 int withdrawDeal(int);
+int checkIfFileExists(const char *filename);
+// TODO 引数にあるconstの意味を確認
 // TODO この関数で残高が変更されない処理が行われたとき、なぜ返り値が0になるか調べる
 
 int main(void)
 {
+    // 通帳ファイルを使わずに操作する場合に備え、念のため10000で初期化
     int balance = 10000; // balanceは残高という意味
 
     // 最初のメニューの選択
@@ -22,23 +27,40 @@ int main(void)
     // 出金処理後の残高を格納する変数
     int withdrawResult;
 
+    // 通帳の名前を管理するための変数
+    char passbookFileName[] = "passbook.txt";
+
     printf("〇〇銀行ATMへようこそ！\n");
     printf("このプログラムでは通帳に見立てたテキストファイルを使って口座の管理をします。\n");
-    printf("accountMemory.txtというファイルを用いて操作します。このファイルがない場合は、自動で新規作成します。\n");
+    printf("%sというファイルを用いて操作します。このファイルがない場合は、自動で新規作成します。\n", passbookFileName);
     printf("上記のファイルはこのプログラムがあるディレクトリ直下に生成されます。\n\n");
 
     // TODO ファイル入出力を用いて残高の管理を行う
     // TODO ファイル入出力を関数化
-    fp = fopen("accoutMemory.txt", "w+"); // w+(読み書き)モードなので、ファイルが存在しない場合は新規作成
-    if (fp == NULL)
+
+    if (checkIfFileExists(passbookFileName))
     {
-        // 念のため、ファイルポインタがNULLの場合の分岐を作成
-        printf("通帳ファイルが読み込めませんでした。\n");
-        printf("1万円口座に入っていると仮定したサンプルプログラムを起動します。\n\n");
+        // check...にて、ファイルが存在する場合は1を返却する。
+        printf("通帳ファイルを発見しました。読み込みます。\n\n");
     }
     else
     {
-        printf("通帳を読み込みました。もしくは新規作成しました。\n\n");
+        printf("通帳ファイルが存在しませんでした。新規に作成します\n");
+
+        fp = fopen(passbookFileName, "w"); // w+(読み書き)モードなので、ファイルが存在しない場合は新規作成
+        if (fp == NULL)
+        {
+            // 念のため、ファイルポインタがNULLの場合の分岐を作成
+            printf("新規作成に失敗しました。異常終了します。\n");
+            exit(1);
+        }
+        else
+        {
+            fputs("10000万円\n", fp);
+            printf("通帳を新規に作成しました。残高は10000万円からスタートです。\n");
+            fclose(fp);
+            printf("正常に通帳ファイルを閉じました。");
+        }
     }
 
     // このブロックでは実際のATMの操作を行う
@@ -97,10 +119,6 @@ int main(void)
         }
 
     } while (choicedAtmMenu != 4);
-
-    // 開いていたファイルを閉じる
-    fclose(fp);
-    printf("通帳ファイルを正常に閉じました\n");
 
     return 0;
 }
@@ -218,4 +236,20 @@ int withdrawDeal(int balance)
         }
     } while (choicedWithdrawMenu != 2);
     return withdrawCash;
+}
+
+// 指定した名前のファイルが存在するか確認する関数
+int checkIfFileExists(const char *filename)
+{
+    /*
+    return: int(0 or 1)
+    arg: char[]
+
+    */
+    struct stat buffer;
+    int exist = stat(filename, &buffer);
+    if (exist == 0)
+        return 1;
+    else
+        return 0;
 }
