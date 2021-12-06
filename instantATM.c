@@ -45,7 +45,6 @@ int main(void)
     printf("%sというファイルを用いて操作します。このファイルがない場合は、自動で新規作成します。\n", passbookFileName);
     printf("上記のファイルはこのプログラムがあるディレクトリ直下に生成されます。\n\n");
 
-    // TODO ファイル入出力を用いて残高の管理を行う
     // TODO ファイル入出力を関数化
 
     if (checkIfFileExists(passbookFileName))
@@ -252,7 +251,7 @@ int withdrawDeal(int balance)
             {
                 if (withdrawCash > 0)
                 {
-                    balance -= withdrawCash; // TODO main関数内の残高更新処理とわけなくてすむようにしたい
+                    balance -= withdrawCash;
                     printf("%d円出金しました。\n", withdrawCash);
                     // 最初のメニューに戻るためにbreak
                     break;
@@ -282,8 +281,9 @@ int checkIfFileExists(const char *filename)
 {
     /*
     return: int(0 or 1)
-    arg: char[]
-
+    arg: char *: 確認したいファイルストリームのポインタ
+    how to use:
+    わたしたファイル名のファイルが存在するか確認する。1なら存在、0なら存在しない。
     */
     struct stat buffer;
     int exist = stat(filename, &buffer);
@@ -296,6 +296,15 @@ int checkIfFileExists(const char *filename)
 // TODO 残高処理の関数を共通化する?つまり、ファイル生成だけをする関数を作る
 void initialPassbookGenerate(FILE *fp, char *filename)
 {
+    /*
+    return: void
+    args: {
+        FILE 読み込むファイルストリームのポインタ
+        char * 読み込むファイル名(拡張子つき)
+    }
+    how to use:
+    ファイルをわたして初期値10000万円を書き込む。
+    */
     fp = fopen(filename, "w"); // w(書き込み)モードなので、ファイルが存在しない場合は新規作成
     if (fp == NULL)
     {
@@ -313,17 +322,29 @@ void initialPassbookGenerate(FILE *fp, char *filename)
 
 void accountRecord(FILE *fp, char *filename, int updatedBalance)
 {
+    /*
+    return: void
+    args: {
+        FILE *: ファイルストリームのポインタ
+        char *:ファイル名
+        int : 出入金によって更新された残高
+    }
+    how to use:
+    ファイル名をわたし、出入金によって更新された残高をファイルに書き込む。
+    */
+
     // 整数を文字列に変換する方法
     // https://www.delftstack.com/ja/howto/c/how-to-convert-an-integer-to-a-string-in-c/#c-%25E8%25A8%2580%25E8%25AA%259E%25E3%2581%25A7%25E6%2595%25B4%25E6%2595%25B0%25E3%2582%2592%25E6%2596%2587%25E5%25AD%2597%25E5%2588%2597%25E3%2581%25AB%25E5%25A4%2589%25E6%258F%259B%25E3%2581%2599%25E3%2582%258B%25E9%2596%25A2%25E6%2595%25B0-itoa
 
     // TODO updatedBalanceの格納でオーバーフローするのを防ぐ処理
-    char balanceString[20]; // StringにしたupdatedBalanceを格納する変数
+    // TODO ここらへんの文字列変換の処理を関数化する
+    char balanceString[1024]; // StringにしたupdatedBalanceを格納する変数
     sprintf(balanceString, "%d", updatedBalance);
 
     const char *unit = "円\n"; // unitは単位という意味
 
     // TODO 確保した文字列メモリを変数として扱う方法
-    if (strlen(balanceString) + strlen(unit) < 20)
+    if (strlen(balanceString) + strlen(unit) < 1024)
     {
         strcat(balanceString, unit);
         // srtcatの使い方:https://marycore.jp/prog/c-lang/concat-c-string/
