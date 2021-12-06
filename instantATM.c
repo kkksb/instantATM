@@ -82,8 +82,9 @@ int main(void)
         }
         while (fgets(buf, str_max, fp) != NULL)
         {
-            printf("最新残高%sを読み取りました。\n", buf);
-            // TODO 読み取った残高をintに変換、balanceに格納
+            // atoi関数：https://monozukuri-c.com/langc-funclist-atoi/#toc3
+            // 読み取った文字列bufを数値に変換している
+            balance = atoi(buf);
         }
         fclose(fp);
     }
