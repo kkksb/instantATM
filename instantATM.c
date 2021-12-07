@@ -27,6 +27,7 @@ void accountRecord(FILE *fp, char *filename, int updatedBalance);
 // 指定した名前のファイルがあるかどうか確認する
 int checkIfFileExists(const char *filename);
 
+char *readLastLine(FILE *fp, char *filename);
 // TODO 引数にあるconstの意味を確認
 
 int main(void)
@@ -41,10 +42,7 @@ int main(void)
 
     // 通帳の名前を管理するための変数
     char passbookFileName[] = "passbook.txt";
-    int str_max = STR_MAX; // 通帳読み込みのとき、fgetsの読み込み最大バイト数の指定
-    int passbookLine = 0;  // カウントした通帳ファイルの行数
-    char buf[STR_MAX];     // fgetsに渡す文字列配列
-    int i;                 //ループカウンタ ファイル行数をカウントする
+    char passbookLastLine[1024];
 
     printf("〇〇銀行ATMへようこそ！\n");
     printf("このプログラムでは通帳に見立てたテキストファイルを使って口座の管理をします。\n");
@@ -57,42 +55,30 @@ int main(void)
     {
         // check...にて、ファイルが存在する場合は1を返却する。
         printf("通帳ファイルを発見しました。読み込みます。\n\n");
+        // TODO 可変個の要素数で宣言しないといけない理由を調査
+        // 最終行にある残高の情報を取得
 
-        // テキストファイルから残高の情報を読み込む
-        // ファイルの最終行だけ読み込む：https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q1298165382
-        fp = fopen(passbookFileName, "r");
-
-        if (fp == NULL)
+        // passbookLastLine = readLastLine()とはできない。直接の代入が許されていない。
+        if (readLastLine(fp, passbookFileName) != NULL)
         {
-            printf("ファイルを読み込めませんでした。\n");
+            strcpy(passbookLastLine, readLastLine(fp, passbookFileName));
+        }
+        else
+        {
+            printf("通帳の最終行を正確に読み込めませんでした。\n");
             exit(1);
         }
-        while (fgets(buf, str_max, fp) != NULL)
+        int lastLineBalance = atoi(passbookLastLine);
+        if (lastLineBalance != -1)
         {
-            //行数のカウント
-            passbookLine++;
+            balance = lastLineBalance;
         }
-        // TODO ここでいったん閉じないと以下の読み飛ばしの操作ができない理由を調査
-        fclose(fp);
-
-        fp = fopen(passbookFileName, "r");
-        if (fp == NULL)
+        else
         {
-            printf("ファイルを読み込めませんでした。\n");
-            exit(1);
+            // 最終行を読み取って-1が返ってくる場合、atoi関数で-1となる、もしくはreadLastLineでうまく読み取れないかのどちらか
+            printf("最終行の値がうまく読み取れませんでした。〇〇〇円という表記になっているかお確かめください。\n");
+            printf("残高を10000円としてプログラムを実行します。");
         }
-        for (i = 0; i < passbookLine - 1; i++) //上からpassbookLine-1行は読み飛ばす
-        {
-            // TODO この動作でなぜ読み飛ばせるのか調べる
-            fgets(buf, str_max, fp);
-        }
-        while (fgets(buf, str_max, fp) != NULL)
-        {
-            // atoi関数：https://monozukuri-c.com/langc-funclist-atoi/#toc3
-            // 読み取った文字列bufを数値に変換している
-            balance = atoi(buf);
-        }
-        fclose(fp);
     }
     else
     {
@@ -396,4 +382,50 @@ void accountRecord(FILE *fp, char *filename, int updatedBalance)
         printf("長すぎる文字が記帳されそうです。記帳処理を中断します。\n\n");
         fclose(fp);
     }
+}
+
+char *readLastLine(FILE *fp, char *filename)
+{
+    // テキストファイルから残高の情報を読み込む
+    // ファイルの最終行だけ読み込む：https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q1298165382
+
+    int passbookLine = 0;     // カウントした通帳ファイルの行数
+    char buf[STR_MAX] = "-1"; // fgetsに渡す文字列配列
+    int i;                    //ループカウンタ ファイル行数をカウントする
+
+    int str_max = STR_MAX; // 通帳読み込みのとき、fgetsの読み込み最大バイト数の指定
+    fp = fopen(filename, "r");
+
+    if (fp == NULL)
+    {
+        printf("ファイルを読み込めませんでした。\n");
+        exit(1);
+    }
+    while (fgets(buf, str_max, fp) != NULL)
+    {
+        //行数のカウント
+        passbookLine++;
+    }
+    // TODO ここでいったん閉じないと以下の読み飛ばしの操作ができない理由を調査
+    fclose(fp);
+
+    fp = fopen(filename, "r");
+    if (fp == NULL)
+    {
+        printf("ファイルを読み込めませんでした。\n");
+        exit(1);
+    }
+    for (i = 0; i < passbookLine - 1; i++) //上からpassbookLine-1行は読み飛ばす
+    {
+        // TODO この動作でなぜ読み飛ばせるのか調べる
+        fgets(buf, str_max, fp);
+    }
+    while (fgets(buf, str_max, fp) != NULL)
+    {
+        // atoi関数：https://monozukuri-c.com/langc-funclist-atoi/#toc3
+        // 読み取った文字列bufを数値に変換している
+        printf("通帳ファイルの最終行を読み取りました。\n");
+    }
+    fclose(fp);
+    return buf;
 }
