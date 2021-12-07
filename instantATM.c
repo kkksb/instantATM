@@ -6,6 +6,7 @@
 #define STR_MAX 256
 
 // プロトタイプ宣言（main関数から他の関数を呼び出すため）
+void instantAtmOpe(int balance, FILE *fp, char *filename);
 int depositDeal(int);
 int withdrawDeal(int);
 int checkIfFileExists(const char *filename);
@@ -21,17 +22,8 @@ int main(void)
     // 通帳ファイルを使わずに操作する場合に備え、念のため10000で初期化
     int balance = 10000; // balanceは残高という意味
 
-    // 最初のメニューの選択
-    int choicedAtmMenu;
-
     // 通帳に見立てたテキストファイル用のファイルポインタ
     FILE *fp;
-
-    // 入金処理後の残高を格納する変数
-    int depositResult;
-
-    // 出金処理後の残高を格納する変数
-    int withdrawResult;
 
     // 通帳の名前を管理するための変数
     char passbookFileName[] = "passbook.txt";
@@ -97,14 +89,28 @@ int main(void)
         printf("通帳を新規に作成しました。残高は10000万円からスタートです。\n");
     }
 
+    instantAtmOpe(balance, fp, passbookFileName);
+
+    return 0;
+}
+
+void instantAtmOpe(int balance, FILE *fp, char *filename)
+{
     // このブロックでは実際のATMの操作を行う
+    int choicedNumber;
+
+    // 出金処理後の残高を格納する変数
+    int withdrawResult;
+
+    // 入金処理後の残高を格納する変数
+    int depositResult;
     do
     {
         printf("お取引内容を以下から選択してください。(1~4で回答)\n");
         printf("1: 残高照会 2: 入金 3: 引き出し 4: 終了 > ");
-        scanf("%d", &choicedAtmMenu);
+        scanf("%d", &choicedNumber);
 
-        switch (choicedAtmMenu)
+        switch (choicedNumber)
         {
         case 1:
             printf("残高の照会をします\n");
@@ -120,7 +126,7 @@ int main(void)
                 // 入金処理の結果が0でない場合は取引が成立している。
                 // 入金額によって残高を更新する。
                 balance += depositResult;
-                accountRecord(fp, passbookFileName, balance);
+                accountRecord(fp, filename, balance);
                 printf("更新した残高を通帳に記帳しました。\n");
                 printf("現在の残高は%d円です。\n\n", balance);
             }
@@ -142,7 +148,7 @@ int main(void)
                     // 出金処理結果が0でない場合は取引が成立。
                     // 出金額で残高を更新。
                     balance -= withdrawResult;
-                    accountRecord(fp, passbookFileName, balance);
+                    accountRecord(fp, filename, balance);
                     printf("更新した残高を通帳に記帳しました。\n");
                     printf("現在の残高は%d円です。\n\n", balance);
                 }
@@ -157,9 +163,7 @@ int main(void)
             break;
         }
 
-    } while (choicedAtmMenu != 4);
-
-    return 0;
+    } while (choicedNumber != 4);
 }
 
 int depositDeal(int balance)
