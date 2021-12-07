@@ -27,7 +27,7 @@ void accountRecord(FILE *fp, char *filename, int updatedBalance);
 // 指定した名前のファイルがあるかどうか確認する
 int checkIfFileExists(const char *filename);
 
-char *readLastLine(FILE *fp, char *filename);
+void readLastLine(FILE *fp, char *filename, char *returnString);
 // TODO 引数にあるconstの意味を確認
 
 int main(void)
@@ -59,15 +59,7 @@ int main(void)
         // 最終行にある残高の情報を取得
 
         // passbookLastLine = readLastLine()とはできない。直接の代入が許されていない。
-        if (readLastLine(fp, passbookFileName) != NULL)
-        {
-            strcpy(passbookLastLine, readLastLine(fp, passbookFileName));
-        }
-        else
-        {
-            printf("通帳の最終行を正確に読み込めませんでした。\n");
-            exit(1);
-        }
+        readLastLine(fp, passbookFileName, passbookLastLine);
         int lastLineBalance = atoi(passbookLastLine);
         if (lastLineBalance != -1)
         {
@@ -384,14 +376,16 @@ void accountRecord(FILE *fp, char *filename, int updatedBalance)
     }
 }
 
-char *readLastLine(FILE *fp, char *filename)
+void readLastLine(FILE *fp, char *filename, char *returnString)
 {
+    // 直接文字列を返すのは困難とのこと。 https://skpme.com/211/#toc3
     // テキストファイルから残高の情報を読み込む
     // ファイルの最終行だけ読み込む：https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q1298165382
 
     int passbookLine = 0;     // カウントした通帳ファイルの行数
     char buf[STR_MAX] = "-1"; // fgetsに渡す文字列配列
     int i;                    //ループカウンタ ファイル行数をカウントする
+    char *temp[1024];
 
     int str_max = STR_MAX; // 通帳読み込みのとき、fgetsの読み込み最大バイト数の指定
     fp = fopen(filename, "r");
@@ -427,5 +421,7 @@ char *readLastLine(FILE *fp, char *filename)
         printf("通帳ファイルの最終行を読み取りました。\n");
     }
     fclose(fp);
-    return buf;
+
+    // 直接文字列をreturnするのは困難。なので、呼び出し下で宣言した文字配列に結果をコピーする形を取る。
+    strcpy(returnString, buf);
 }
