@@ -17,6 +17,11 @@ int depositDeal(int);
 int withdrawDeal(int);
 
 // 通帳ファイル操作
+// ATM操作前の通帳操作関数
+void initialPassbookOpe(FILE *fp, char *filename, char *passbookLastLine, int *balance);
+
+//通帳ファイルの最終行を読み込む
+void readLastLine(FILE *fp, char *filename, char *returnString);
 // 通帳ファイルを新規作成する
 void initialPassbookGenerate(FILE *fp, char *filename);
 
@@ -27,7 +32,6 @@ void accountRecord(FILE *fp, char *filename, int updatedBalance);
 // 指定した名前のファイルがあるかどうか確認する
 int checkIfFileExists(const char *filename);
 
-void readLastLine(FILE *fp, char *filename, char *returnString);
 // TODO 引数にあるconstの意味を確認
 
 int main(void)
@@ -49,43 +53,18 @@ int main(void)
     printf("%sというファイルを用いて操作します。このファイルがない場合は、自動で新規作成します。\n", passbookFileName);
     printf("上記のファイルはこのプログラムがあるディレクトリ直下に生成されます。\n\n");
 
-    // TODO ファイル入出力を関数化
-
-    if (checkIfFileExists(passbookFileName))
-    {
-        // check...にて、ファイルが存在する場合は1を返却する。
-        printf("通帳ファイルを発見しました。読み込みます。\n\n");
-        // TODO 可変個の要素数で宣言しないといけない理由を調査
-        // 最終行にある残高の情報を取得
-
-        // passbookLastLine = readLastLine()とはできない。直接の代入が許されていない。
-        readLastLine(fp, passbookFileName, passbookLastLine);
-        int lastLineBalance = atoi(passbookLastLine);
-        if (lastLineBalance != -1)
-        {
-            balance = lastLineBalance;
-        }
-        else
-        {
-            // 最終行を読み取って-1が返ってくる場合、atoi関数で-1となる、もしくはreadLastLineでうまく読み取れないかのどちらか
-            printf("最終行の値がうまく読み取れませんでした。〇〇〇円という表記になっているかお確かめください。\n");
-            printf("残高を10000円としてプログラムを実行します。");
-        }
-    }
-    else
-    {
-        printf("通帳ファイルが存在しませんでした。新規に作成します\n");
-
-        //通帳ファイルを新規に作成する関数
-        initialPassbookGenerate(fp, passbookFileName);
-        printf("通帳を新規に作成しました。残高は10000万円からスタートです。\n");
-    }
+    // ATM操作前の手帳ファイルの操作（最新残高読み込み、テキストファイルの新規作成）
+    // TODO balanceを直接変更するためにポインタを渡しているが、他の方法はないか？
+    // TODO この関数をもう少しわかりやすく分解できないか？
+    initialPassbookOpe(fp, passbookFileName, passbookLastLine, &balance);
 
     instantAtmOpe(balance, fp, passbookFileName);
+    printf("ご利用ありがとうございました！同ディレクトリにある%sを確認してみてください！\n", passbookFileName);
 
     return 0;
 }
 
+// TODO この関数について、fpを呼ばずに設計できないか？(参照渡しなら、この関数が知る必要はないはず)
 void instantAtmOpe(int balance, FILE *fp, char *filename)
 {
     /*
@@ -373,6 +352,39 @@ void accountRecord(FILE *fp, char *filename, int updatedBalance)
     {
         printf("長すぎる文字が記帳されそうです。記帳処理を中断します。\n\n");
         fclose(fp);
+    }
+}
+
+void initialPassbookOpe(FILE *fp, char *filename, char *passbookLastLine, int *balance)
+{
+    if (checkIfFileExists(filename))
+    {
+        // check...にて、ファイルが存在する場合は1を返却する。
+        printf("通帳ファイルを発見しました。読み込みます。\n\n");
+        // TODO 可変個の要素数で宣言しないといけない理由を調査
+        // 最終行にある残高の情報を取得
+
+        // passbookLastLineに、残高ファイルの最終行から読み取った文字列を格納している
+        readLastLine(fp, filename, passbookLastLine);
+        int lastLineBalance = atoi(passbookLastLine);
+        if (lastLineBalance != -1)
+        {
+            *balance = lastLineBalance;
+        }
+        else
+        {
+            // 最終行を読み取って-1が返ってくる場合、atoi関数で-1となる、もしくはreadLastLineでうまく読み取れないかのどちらか
+            printf("最終行の値がうまく読み取れませんでした。〇〇〇円という表記になっているかお確かめください。\n");
+            printf("残高を10000円としてプログラムを実行します。");
+        }
+    }
+    else
+    {
+        printf("通帳ファイルが存在しませんでした。新規に作成します\n");
+
+        //通帳ファイルを新規に作成する関数
+        initialPassbookGenerate(fp, filename);
+        printf("通帳を新規に作成しました。残高は10000万円からスタートです。\n");
     }
 }
 
