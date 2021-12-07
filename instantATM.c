@@ -3,16 +3,30 @@
 #include <sys/stat.h> // ファイルの存在確認をするためのライブラリ
 // https://www.delftstack.com/ja/howto/c/c-check-if-file-exists/
 #include <string.h> // strcatなどを扱うヘッダ
+
+// fgetsをする際に、読み取り限界メモリ指定用
 #define STR_MAX 256
 
 // プロトタイプ宣言（main関数から他の関数を呼び出すため）
+
+// メイン画面を操作する
 void instantAtmOpe(int balance, FILE *fp, char *filename);
+
+// 出入金管理
 int depositDeal(int);
 int withdrawDeal(int);
+
+// 通帳ファイル操作
+// 通帳ファイルを新規作成する
+void initialPassbookGenerate(FILE *fp, char *filename);
+
+// 通帳ファイルへの書き込み
+void accountRecord(FILE *fp, char *filename, int updatedBalance);
+
+// utility関数
+// 指定した名前のファイルがあるかどうか確認する
 int checkIfFileExists(const char *filename);
 
-void initialPassbookGenerate(FILE *fp, char *filename);
-void accountRecord(FILE *fp, char *filename, int updatedBalance);
 // TODO 引数にあるconstの意味を確認
 
 int main(void)
@@ -96,6 +110,16 @@ int main(void)
 
 void instantAtmOpe(int balance, FILE *fp, char *filename)
 {
+    /*
+    return void
+    args: {
+        int balance: 管理対象の残高
+        FILE: 記帳するテキストファイル
+        filename: 記帳するテキストファイルの名前
+    }
+    how to use:
+    最初に開くATMメニューを操作する。出入金、残高紹介、プログラム終了をユーザに選択させる。
+    */
     // このブロックでは実際のATMの操作を行う
     int choicedNumber;
 
