@@ -1,15 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="" />
+    <!-- TODO Google Fontsを使ってみる -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>CL銀行</title>
+
+    <link rel="icon" type="image/png" href="./image/bank_logo.png" />
+
+    <!-- ブラウザのデフォルトのcssをリセット -->
+    <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css" />
+
+    <!-- 独自のcssはリセット後に読み込ませる  -->
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <!-- タブを作る https://style.potepan.com/articles/21437.html -->
-    <h1>CL銀行</h1>
-    <h2 class="title"><span>インターネットATMとは</span></h2>
+    <!-- TODO title-block-wrapperを全体にかけるようにdivタグを宣言してしまう -->
+    <!-- TODO idも使ってみる -->
+    <!-- TODO headerの文字の左に余白を入れる方法を聞いてみる -->
+    <header class="header-and-footer-wrapper">C Language Bank</header>
+
+    <!-- 横並び要素 -->
+    <div class="title-and-login title-block-wrapper">
+      <div class="logo-title-wrapper">
+        <!-- TODO ロゴと文字を一つにまとめた画像を用意する -->
+        <img src="./image/bank_logo.png" alt="銀行のロゴ" class="bank-logo" />
+        <h1 class="title">CL銀行</h1>
+      </div>
+      <!-- このdivでグループ化することで、以下のボタン群とタイトルで二つの要素として認識される -->
+      <div>
+        <button class="semi-round-button title-block-button-wrapper">
+          口座開設
+        </button>
+        <button class="semi-round-button title-block-button-wrapper">
+          ログイン
+        </button>
+      </div>
+    </div>
+
+    <!-- TODO 可能であればここをタブにしたい -->
+    <!-- タイトルとログイン同様、両端に余白を入れる -->
+    <nav class="title-block-wrapper">
+      <ul class="main-nav nav-wrapper">
+        <li><a href="index.html">商品・サービス</a></li>
+        <li><a href="index.html">金利・手数料</a></li>
+        <li><a href="index.html">各種お手続き</a></li>
+        <li><a href="index.html">よくある質問</a></li>
+      </ul>
+    </nav>
+
+    <!-- 画像を挿入、タイトルとログインのボックスとそろえるために、共通のwrapperを適用 -->
+    <!-- TODO トリミングをしていいサイズにする svg形式で扱おう-->
+    <img
+      src="./image/bank_image.jpg"
+      alt="ホーム画面のイメージ画像"
+      class="title-block-wrapper image-wrapper"
+    />
+
+    <div class="title-block-wrapper service-description">
+      <h2>Web CL バンキングサービス</h2>
+      <!-- hrで罫線が引ける -->
+      <hr />
+      <p>残高照会や出入金をWebですべて行えるサービスです。</p>
+      <button class="semi-round-button">CLオンラインサービスにログイン</button>
+    </div>
+
+    <!-- 一番上のdiv要素で横並び -->
+    <div>
+      <span>ATMを使う</span>
+      <div>
+        <!-- 角なしの四角で囲いたい -->
+        <button>国内外ATM検索</button>
+        <button>ATMで使えるサービス</button>
+      </div>
+      <div>
+        <!-- 角なしの四角で囲いたい -->
+        <span>スマホアプリを使う</span>
+        <button>iOS</button>
+        <button>Android</button>
+      </div>
+    </div>
+
+    <!-- カルーセルデザイン -->
+    <!-- 参考 https://coliss.com/articles/build-websites/operation/css/css-only-carousel.html -->
+    <div class="slider">
+      <div class="slides">
+        <div id="slide-1">Under Construction</div>
+        <div id="slide-2">Under Construction</div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <span>C Language Bank</span>
+    </footer>
   </body>
 </html>

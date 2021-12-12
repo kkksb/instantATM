@@ -1,0 +1,119 @@
+/* 文字コードを指定して、文字化けを防ぐ */
+@charset "UTF-8";
+
+/* TODO フォントをおしゃれにする */
+/* TODO 変数による管理をする */
+/* TODO html全体の設定をする（フォントや文字コード） */
+/* TODO ごちゃごちゃになったcssを整理する */
+
+/* 全体共通操作 */
+body {
+  color: #432;
+}
+
+/* aタグのリンクの下線部が表示されなくなる */
+a {
+  text-decoration: none;
+}
+
+/* 固有タグの操作 */
+
+header {
+  background-color: #007fff;
+  color: #ffffff;
+  font-size: 32px;
+  margin-bottom: 1%;
+}
+
+footer {
+  background-color: #007fff;
+  color: #ffffff;
+  font-size: 28px;
+}
+
+/* クラスの操作(コンポーネント) */
+
+.title {
+  font-size: 52px;
+  /* h1の上下に不要なマージンがあるので削除 */
+  margin: 0;
+}
+
+.bank-logo {
+  width: 60px;
+  margin-right: 10px;
+}
+
+/* MEMO flex-endで子要素の並びを指定する際、display プロパティにflexを指定する */
+/* TODO marginではなくpaddingを使ったならば？ */
+.title-and-login {
+  /* flexを指定 */
+  display: flex;
+  /* flex-endで下ぞろえ space-betweenで真ん中に余白 */
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ボタンの角をとる https://developer.mozilla.org/ja/docs/Web/CSS/border-radius */
+.semi-round-button {
+  font-size: 24px;
+  background-color: #007fff;
+  color: #ffffff;
+  border-radius: 28px;
+}
+
+.semi-round-button:hover {
+  background-color: grey;
+}
+
+.main-nav {
+  font-size: 28px;
+}
+
+/* 上部のロゴ、ログインボタン直下のaタグについて、文字色を黒に統一 */
+.main-nav a {
+  color: black;
+}
+
+.main-nav a:hover {
+  color: #0bd;
+}
+
+/* サービス概要を示すブロックに当てるスタイル */
+.service-description {
+  /* 文字列を中央に寄せるので、text-align */
+  text-align: center;
+}
+
+/* wrapper */
+
+.title-block-wrapper {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 4%;
+  margin-bottom: 32px;
+}
+
+.logo-title-wrapper {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.title-block-button-wrapper {
+  padding: 8px;
+  /* TODO remとpxの違いを調べる */
+  width: 12rem;
+}
+
+.nav-wrapper {
+  display: flex;
+  justify-content: space-around;
+  /* なかてんを削除 */
+  list-style: none;
+}
+
+.image-wrapper {
+  display: flex;
+  justify-content: center;
+}
